@@ -1,0 +1,8 @@
+./ipynb_checkpoints
+TEST**/*
+TRAIN**/*
+META/
+.gitignore
+answer_sample.csv
+*.ipynb
+__pycache__/*
