@@ -5,7 +5,6 @@ import torch.nn as nn
 
 # 모델
 class Feature2DEncoder(nn.Module):
-
     def __init__(self, num_channels, num_cnn_out=7, kernel_size=3, padding=1):
         super().__init__()
         self.conv1 = nn.Sequential(
