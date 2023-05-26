@@ -23,10 +23,7 @@ class Feature2DEncoder(nn.Module):
             nn.SELU()
         )
         self.pool = nn.AvgPool1d(kernel_size=5)
-        self.linear = nn.Sequential(
-            nn.Linear(in_features=50, out_features=num_cnn_out),
-            nn.SELU()
-        )
+        self.linear = nn.Linear(in_features=50, out_features=num_cnn_out)
 
     def __call__(self, inputs):
         if inputs.dim() == 4:
