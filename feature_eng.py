@@ -8,19 +8,19 @@ class Feature2DEncoder(nn.Module):
     def __init__(self, num_channels, num_cnn_out=7, kernel_size=3, padding=1):
         super().__init__()
         self.conv1 = nn.Sequential(
-            nn.Conv1d(in_channels=num_channels, out_channels=25, kernel_size=kernel_size, padding=padding), # num_cnn_out dependent
-            nn.SELU()
+            nn.Conv1d(in_channels=num_channels, out_channels=35, kernel_size=kernel_size, padding=padding), # num_cnn_out dependent
+            nn.BatchNorm1d(num_features=35),
+            nn.Tanh()
         )
         self.conv2 = nn.Sequential(
-            nn.Conv1d(in_channels=25, out_channels=50, kernel_size=kernel_size, padding=padding), # num_cnn_out dependent
+            nn.Conv1d(in_channels=35, out_channels=50, kernel_size=kernel_size, padding=padding), # num_cnn_out dependent
             nn.BatchNorm1d(num_features=50),
-            nn.SELU()
+            nn.Tanh()
         )
         self.conv3 = nn.Sequential(
             nn.Conv1d(in_channels=50, out_channels=50, kernel_size=kernel_size, padding=padding), # num_cnn_out dependent
             nn.BatchNorm1d(num_features=50),
-            nn.Dropout(p=0.4),
-            nn.SELU()
+            nn.Tanh()
         )
         self.pool = nn.AvgPool1d(kernel_size=5)
         self.linear = nn.Linear(in_features=50, out_features=num_cnn_out)

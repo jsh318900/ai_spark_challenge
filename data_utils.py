@@ -21,11 +21,10 @@ def combine_df(root_dir, metadata_path):
     return pd.concat(dfs, axis=0)
 
 class AWSTrainDataset(Dataset):
-    def __init__(self, data, num_aws, time_size, neighbors):
+    def __init__(self, data, num_aws, time_size):
         self.data = data
         self.num_aws = num_aws
         self.time_size = time_size
-        self.neighbors = neighbors
 
     def __len__(self):
         T, A, _ = self.data.shape
@@ -35,28 +34,27 @@ class AWSTrainDataset(Dataset):
         time_idx = idx // 30 + self.time_size
         aws_idx = idx % 30
         aws_loc = self.data[0, aws_idx, -2:]
-        data1 = self.data[time_idx - self.time_size:time_idx, self.neighbors[aws_idx], :]
+        data1 = self.data[time_idx - self.time_size:time_idx, :, :]
         data1[:, :, -2:] -= aws_loc
         data2 = self.data[time_idx: time_idx + self.time_size, aws_idx, :-2]
         return data1, data2
 
     def get(self, time_idx, aws_idx):
         aws_loc = self.data[0, aws_idx, -2:]
-        data1 = self.data[time_idx - self.time_size:time_idx, self.neighbors[aws_idx], :]
+        data1 = self.data[time_idx - self.time_size:time_idx, :, :]
         data1[:, :, -2:] -= aws_loc
         return data1
     
-    def get_pm(self, time_idx, neighbors, pm_pos):
-        data1 = self.data[time_idx - self.time_size:time_idx, neighbors, :]
+    def get_pm(self, time_idx, pm_pos):
+        data1 = self.data[time_idx - self.time_size:time_idx, :, :]
         data1[:, :, -2:] -= pm_pos
         return data1
 
 class PMTrainDataset(Dataset):
-    def __init__(self, data, num_aws, time_size, neighbors):
+    def __init__(self, data, num_aws, time_size):
         self.data = data
         self.num_aws = num_aws
         self.time_size = time_size
-        self.neighbors = neighbors
 
     def __len__(self):
         T, A, _ = self.data.shape
@@ -66,14 +64,14 @@ class PMTrainDataset(Dataset):
         time_idx = idx // 17 + self.time_size + 10
         aws_idx = idx % 17
         aws_loc = self.data[0, aws_idx, -2:]
-        data1 = self.data[time_idx - self.time_size:time_idx, self.neighbors[aws_idx], :]
+        data1 = self.data[time_idx - self.time_size:time_idx, :, :]
         data1[:, :, -2:] -= aws_loc
         data2 = self.data[time_idx: time_idx + self.time_size, aws_idx, :-2]
         return data1, data2
 
     def get(self, time_idx, aws_idx):
         aws_loc = self.data[0, aws_idx, -2:]
-        data1 = self.data[time_idx - self.time_size:time_idx, self.neighbors[aws_idx], :]
+        data1 = self.data[time_idx - self.time_size:time_idx, :, :]
         data1[:, :, -2:] -= aws_loc
         return data1
 
